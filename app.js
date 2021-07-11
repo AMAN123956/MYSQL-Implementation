@@ -15,12 +15,24 @@ const shopRoutes = require('./routes/shop');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-db.execute('SELECT * FROM products')
-    .then(([rows,fieldData]) => console.log(rows[0]))
+// Old method
+// db.execute('SELECT * FROM products')
+//     .then(([rows,fieldData]) => console.log(rows[0]))
+//     .catch(err => console.log(err))
+
+// ========================================================
+// Sequelize Method to connect to database
+const sequelize = require('./util/database')
+sequelize.sync().
+    then(result => {
+        console.log(result)
+      
+app.listen(3000,console.log('server running'));
+
+    })
     .catch(err => console.log(err))
+
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 app.use(errorController.get404);
-
-app.listen(3000,console.log('server running'));
